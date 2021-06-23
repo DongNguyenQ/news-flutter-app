@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:news_flutter_app/ui/screens/article_detail_screen.dart';
-import 'package:news_flutter_app/ui/screens/preferences_screen.dart';
-import 'package:news_flutter_app/ui/screens/profile_screen.dart';
-import 'package:news_flutter_app/ui/screens/top_headline_screen.dart';
+import 'package:flutter/services.dart';
 import 'package:beamer/beamer.dart';
+import 'package:news_flutter_app/model/article_entity.dart';
+import 'package:news_flutter_app/view/screens/article_detail_screen.dart';
+import 'package:news_flutter_app/view/screens/preferences_screen.dart';
+import 'package:news_flutter_app/view/screens/profile_screen.dart';
+import 'package:news_flutter_app/view/screens/top_headline_screen.dart';
+import 'package:news_flutter_app/viewmodel/profile_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 void main() {
+  SystemChrome.setEnabledSystemUIOverlays([]);
   runApp(MyApp());
 }
 
@@ -76,7 +83,8 @@ class MyApp extends StatelessWidget {
                   beamLocations: [
                     TopHeadlineLocation(),
                     PreferencesLocation(),
-                    ProfileLocation()
+                    ProfileLocation(),
+                    ArticleDetailLocation()
                   ],
                 ),
               ),
@@ -92,10 +100,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerDelegate: routerDelegate,
-      routeInformationParser: BeamerParser(),
+    return ChangeNotifierProvider(
+      create: (context) => ProfileViewModel(),
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerDelegate: routerDelegate,
+        routeInformationParser: BeamerParser(),
+        backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
+      ),
     );
   }
 }
@@ -116,6 +128,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
     final BeamLocation currentLocation =
         widget.beamerKey.currentState!.currentBeamLocation;
     return BottomNavigationBar(
+      selectedItemColor: Colors.black,
       currentIndex: currentLocation is TopHeadlineLocation
           ? 0
           : currentLocation is PreferencesLocation
@@ -151,23 +164,12 @@ class TopHeadlineLocation extends BeamLocation {
         ),
       );
     }
-    if (state.pathParameters
-        .containsKey(RouteInformation[Routes.article_detail])) {
-      pages.add(
-        new BeamPage(
-          key: ValueKey(RouteInformation[Routes.article_detail]),
-          title: 'Article Detail',
-          child: ArticleDetailScreen(),
-        ),
-      );
-    }
     return pages;
   }
 
   @override
   List get pathBlueprints => [
         '/${RouteInformation[Routes.top_headline]}',
-        '/${RouteInformation[Routes.top_headline]}/:${RouteInformation[Routes.article_detail]}'
       ];
 }
 
@@ -184,23 +186,12 @@ class PreferencesLocation extends BeamLocation {
         ),
       );
     }
-    if (state.pathParameters
-        .containsKey(RouteInformation[Routes.article_detail])) {
-      pages.add(
-        new BeamPage(
-          key: ValueKey(RouteInformation[Routes.article_detail]),
-          title: 'Article Detail',
-          child: ArticleDetailScreen(),
-        ),
-      );
-    }
     return pages;
   }
 
   @override
   List get pathBlueprints => [
         '/${RouteInformation[Routes.preferences]}',
-        '/${RouteInformation[Routes.preferences]}/:${RouteInformation[Routes.article_detail]}'
       ];
 }
 
@@ -224,11 +215,58 @@ class ProfileLocation extends BeamLocation {
   List get pathBlueprints => ['/${RouteInformation[Routes.profile]}'];
 }
 
+class ArticleDetailLocation extends BeamLocation {
+  @override
+  List<BeamPage> buildPages(BuildContext context, BeamState state) {
+    List<BeamPage> pages = [];
+    if (state.uri.pathSegments
+        .contains(RouteInformation[Routes.article_detail])) {
+      String article = state.queryParameters['article']!;
+      ArticleEntity articleEntity = ArticleEntity.fromJson(json.decode(article));
+      pages.add(
+        new BeamPage(
+          key:
+              ValueKey('${RouteInformation[Routes.article_detail]}-${articleEntity.source!.id ?? articleEntity.source!.name}'),
+          title: 'Profile',
+          child: ArticleDetailScreen(article: articleEntity),
+        ),
+      );
+    }
+    return pages;
+  }
+
+  @override
+  List get pathBlueprints => ['/${RouteInformation[Routes.article_detail]}'];
+}
+
+// class LoginLocation extends BeamLocation {
+//   @override
+//   List<BeamPage> buildPages(BuildContext context, BeamState state) {
+//     List<BeamPage> pages = [];
+//     if (state.uri.pathSegments
+//         .contains(RouteInformation[Routes.article_detail])) {
+//       final articleID = state.queryParameters['articleID'];
+//       pages.add(
+//         new BeamPage(
+//           key: ValueKey('${RouteInformation[Routes.login]}'),
+//           title: 'login',
+//           child: ArticleDetailScreen(articleID: articleID),
+//         ),
+//       );
+//     }
+//     return pages;
+//   }
+
+//   @override
+//   List get pathBlueprints => ['/${RouteInformation[Routes.login]}'];
+// }
+
 final Map<Routes, String> RouteInformation = {
   Routes.top_headline: 'headline',
   Routes.preferences: 'preferences',
   Routes.profile: 'profile',
-  Routes.article_detail: 'articleID'
+  Routes.article_detail: 'articles',
+  // Routes.login: 'login'
 };
 
-enum Routes { top_headline, preferences, profile, article_detail }
+enum Routes { top_headline, preferences, profile, article_detail, login }

@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'source_entity.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable()
 class SourceEntity {
   final String? id;
   final String? name;
