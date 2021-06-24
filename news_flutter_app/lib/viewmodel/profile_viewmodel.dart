@@ -17,13 +17,17 @@ class ProfileViewModel extends ChangeNotifier {
 
   void validateHaveAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final UserEntity? user =
-        UserEntity.fromJson(json.decode(prefs.getString('credentials')!));
-    if (user == null) {
+    final userString = prefs.getString('credentials');
+    if (userString == null) {
       this.doHaveAccount = false;
     } else {
       this.doHaveAccount = true;
     }
+    notifyListeners();
+  }
+
+  void finishShowErrorMessage() {
+    this.errorMessage = null;
     notifyListeners();
   }
 
@@ -37,17 +41,21 @@ class ProfileViewModel extends ChangeNotifier {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final user =
           UserEntity.fromJson(json.decode(prefs.getString('credentials')!));
-      print('USER NAME : ${user.username}');
-      print('PASSWORD : ${user.password}');
-      if (user.username != username || user.password != password) {
-        this.errorMessage = 'Wrong credentials, please check again';
-        print('NON MATCH');
+      print('USER NAME EXISTED : ${user.username}');
+      print('PASSWORD EXISTED : ${user.password}');
+      if (user.username != username) {
+        this.errorMessage = 'Wrong username, please check again';
+      } else if (user.password != password) {
+        this.errorMessage = 'Wrong password, please check again';
       } else {
-        print('MATCH');
         this.errorMessage = null;
         this.user = user;
       }
     }
+    notifyListeners();
+  }
+
+  void refresh() {
     notifyListeners();
   }
 
@@ -60,7 +68,6 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   void createNewAccount(String? username, String? password) async {
-    print('CREATE NEW ACCOUNT');
     final result = validate(username, password);
     if (result != null) {
       this.errorMessage = result;

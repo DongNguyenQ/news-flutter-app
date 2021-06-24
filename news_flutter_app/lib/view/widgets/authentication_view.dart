@@ -4,10 +4,9 @@ import 'package:news_flutter_app/view/widgets/common_ui.dart';
 
 class LoginView extends StatelessWidget {
   final Function login;
-  final Function? signUp;
-  final BuildContext? parentCtx;
+  final String? errorText;
   const LoginView({
-    Key? key, required this.login, this.signUp, this.parentCtx}) :
+    Key? key, required this.login, this.errorText}) :
         super(key: key);
 
   @override
@@ -16,37 +15,45 @@ class LoginView extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
-          AppText.h2Bitter('Bạn chưa đăng nhập'),
+          AppText.h2Bitter('You have not signed in yet'),
           SizedBox(height: 12,),
-          AppText.bodyBitter('Vui lòng đăng nhập để tiếp tục'),
+          AppText.bodyBitter('Please sign in to continue exploring'),
+          errorText != null ? SizedBox(height: 12,) : SizedBox(),
+          errorText != null ? AppText.captionBitter(errorText!, color: Colors.red,) : SizedBox(),
           SizedBox(height: 12,),
           AuthenForm(
             buttonText: 'Login',
             onSubmit: login,
           ),
-          SizedBox(height: signUp != null && parentCtx != null ? 20 : 0),
-          signUp != null && parentCtx != null ? GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: parentCtx!,
-                    builder: (context) {
-                      return SignUpView(signUp: signUp!);
-                    });
-              },
-              child: AppText.captionBitter('Create a new account'),
-          ) : SizedBox()
+          // SizedBox(height: signUp != null && parentCtx != null ? 20 : 0),
+          // signUp != null && parentCtx != null ? GestureDetector(
+          //     onTap: () {
+          //       showModalBottomSheet(
+          //           isScrollControlled: true,
+          //           context: parentCtx!,
+          //           builder: (context) {
+          //             return SignUpView(signUp: signUp!, errorText: errorSignUpText);
+          //           });
+          //     },
+          //     child: AppText.captionBitter('Create a new account'),
+          // ) : SizedBox()
         ],
       ),
     );
   }
+
+  // void signUpInsideLoginView() {
+  //   signUp!;
+  //
+  // }
 }
 
 
 class SignUpView extends StatelessWidget {
   final Function signUp;
+  final String? errorText;
   const SignUpView({
-    Key? key, required this.signUp})
+    Key? key, required this.signUp, this.errorText})
       : super(key: key);
 
   @override
@@ -57,10 +64,14 @@ class SignUpView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AppText.h2Bitter('Đăng ký'),
+            AppText.h2Bitter('Sign Up'),
             SizedBox(height: 12,),
-            AppText.captionBitter('Vui lòng điền thông tin bên dưới'),
+            AppText.captionBitter('Please fill up information'),
             SizedBox(height: 12,),
+            errorText != null
+                ? AppText.captionBitter(errorText!, color: Colors.red,)
+                : SizedBox(),
+            errorText != null ? SizedBox(height: 12,) : SizedBox(),
             AuthenForm(
               buttonText: 'SignUp',
               onSubmit: signUp,
