@@ -32,6 +32,20 @@ class AppText extends StatelessWidget {
       {Color color = kcMediumGreyColor, this.maxLines, this.align, this.size, this.overflow})
       : style = bodyStyle.copyWith(color: color, fontSize: size);
 
+  AppText.h2Bitter(this.text, {this.maxLines, this.align, this.size, this.overflow})
+      : style = h2StyleBitter;
+  AppText.headlineBitter(this.text, {this.maxLines, this.align, this.size, this.overflow})
+      : style = headlineStyleBitter;
+  AppText.subheadingBitter(this.text, {this.maxLines, this.align, this.size, this.overflow})
+      : style = subheadingStyleBitter;
+  AppText.captionBitter(this.text,
+      {Color color = kcMediumGreyColor, this.maxLines, this.align, this.size, this.overflow})
+      : style = captionStyleBitter.copyWith(color: color).merge(TextStyle(wordSpacing: 2));
+
+  AppText.bodyBitter(this.text,
+      {Color color = kcMediumGreyColor, this.maxLines, this.align, this.size, this.overflow})
+      : style = bodyStyleBitter.copyWith(color: color, fontSize: size).merge(TextStyle(wordSpacing: 2, height: 1.5));
+
   @override
   Widget build(BuildContext context) {
     return Text(text, overflow: overflow,
@@ -146,6 +160,22 @@ class TextInputView extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+
+class CustomLoadingIndicator extends StatelessWidget {
+  const CustomLoadingIndicator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        height: 24,
+        width: 24,
+        child: CircularProgressIndicator(strokeWidth: 1.5, color: Colors.black),
       ),
     );
   }

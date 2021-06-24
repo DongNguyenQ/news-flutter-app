@@ -49,7 +49,8 @@ class ArticleDetailView extends StatelessWidget {
                   background: AspectRatio(
                       aspectRatio: imageRatio,
                       child:
-                          CustomCachedNetworkImage(url: article!.urlToImage!)),
+                      article!.urlToImage != null && article!.urlToImage!.length > 0
+                          ? CustomCachedNetworkImage(url: article!.urlToImage!) : SizedBox()),
                   stretchModes: [StretchMode.zoomBackground],
                 ),
               )
@@ -71,90 +72,67 @@ class ArticleDetailView extends StatelessWidget {
                                   Icon(Icons.edit,
                                       size: 16, color: kcLightGreyColor),
                                   SizedBox(width: 4),
-                                  Expanded(child: AppText.body(article!.author!, maxLines: 1, overflow: TextOverflow.clip,)),
+                                  Expanded(child:
+                                    AppText.captionBitter(
+                                      article!.author!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.clip,
+                                      // color: Colors.red[300]!,
+                                    ),
+                                  ),
                                 ],
                               ),
                           )
                           : SizedBox(),
                       // AppText.body(DateFormat('kk:mm - dd/MM/yyyy')
                       //     .format(article!.publishedAt))
-                      Expanded(child: AppText.body(article!.publishedAt, maxLines: 1, overflow: TextOverflow.clip, align: TextAlign.end,))
+                          Expanded(child: AppText.captionBitter(
+                            article!.publishedAt,
+                            maxLines: 1,
+                            overflow: TextOverflow.clip,
+                            // color: Colors.red[300]!,
+                            align: TextAlign.end,
+                          ),
+                        )
                     ],
                   ),
                   SizedBox(height: 8),
-                  AppText.subheading(article!.title ?? "",
-                      align: TextAlign.justify),
+                  AppText.subheadingBitter(article!.title ?? ""),
+                  // Text(article!.title ?? "", style: TextStyle(fontSize: 20),),
                   SizedBox(height: spacing),
-                  AppText.body(article!.description ?? ""),
+                  AppText.bodyBitter(article!.description ?? ""),
                   SizedBox(height: spacing),
-                  AppText.body(article!.content ?? ""),
+                  AppText.bodyBitter(article!.content ?? ""),
                   SizedBox(height: spacing),
-                  article!.url != null ? MaterialButton(
-                      onPressed: () {
-                        launchURL(article!.url!);
-                      },
-                      child: AppText.body('Link gốc')) : SizedBox(),
+                  SizedBox(height: spacing),
+                  SizedBox(height: spacing),
+                  article!.url != null
+                      ? MaterialButton(
+                          minWidth: 200,
+                          height: 50,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.grey, width: 0.5)
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AppText.bodyBitter('Full Article'),
+                            ],
+                          ),
+                          onPressed: () {
+                            launchURL(article!.url!);
+                          },
+                          color: Colors.transparent,
+                        )
+                      : SizedBox(),
                   SizedBox(height: spacing),
                 ],
               ),
             ),
-          )),
-
-      // extendBodyBehindAppBar: true,
-      // appBar: new AppBar(
-      //   leading: IconButton(
-      //     icon: Icon(Icons.arrow_back),
-      //     onPressed: () {
-      //       context.beamBack();
-      //     },
-      //   ),
-      //   elevation: 0,
-      //   backgroundColor: Colors.transparent,
-      // ),
-      // body: SingleChildScrollView(
-      //   child: Column(
-      //     children: [
-      //       AspectRatio(
-      //           aspectRatio: imageRatio,
-      //           child: CustomCachedNetworkImage(url: article1.urlToImage)),
-      //       SizedBox(height: spacing),
-      //       Padding(
-      //         padding: EdgeInsets.symmetric(horizontal: bodyPadding),
-      //         child: Column(
-      //           children: [
-      //             Row(
-      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //               children: [
-      //                 Row(
-      //                   children: [
-      //                     Icon(Icons.edit, size: 16, color: kcLightGreyColor),
-      //                     SizedBox(width: 4),
-      //                     AppText.caption(article1.author),
-      //                   ],
-      //                 ),
-      //                 AppText.caption(DateFormat('kk:mm - dd/MM/yyyy')
-      //                     .format(article1.publishedAt))
-      //               ],
-      //             ),
-      //             SizedBox(height: 8),
-      //             AppText.subheading(article1.title, align: TextAlign.justify),
-      //             SizedBox(height: spacing),
-      //             AppText.body(article1.description, align: TextAlign.justify),
-      //             SizedBox(height: spacing),
-      //             AppText.body(article1.content, align: TextAlign.justify),
-      //             SizedBox(height: spacing),
-      //             MaterialButton(
-      //                 onPressed: () {
-      //                   launchURL(article1.url);
-      //                 },
-      //                 child: AppText.body('Link gốc')),
-      //             SizedBox(height: spacing),
-      //           ],
-      //         ),
-      //       )
-      //     ],
-      //   ),
-      // ),
+          ),
+      ),
     );
   }
 }

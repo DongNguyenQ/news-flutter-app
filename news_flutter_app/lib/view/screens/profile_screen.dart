@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:news_flutter_app/view/screens/login_screen.dart';
+import 'package:flutter/widgets.dart';
+import 'package:news_flutter_app/model/user_entity.dart';
+import 'package:news_flutter_app/view/widgets/authentication_view.dart';
 import 'package:news_flutter_app/view/widgets/common_ui.dart';
 import 'package:news_flutter_app/viewmodel/profile_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -22,59 +24,42 @@ class ProfileView extends StatelessWidget {
     vm.validateHaveAccount();
     return Scaffold(
       appBar: new AppBar(
-        title: Text('ProfileView'),
+        title: AppText.h2Bitter('Profile'),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             vm.getUserInfo != null
-                ? AppText.body(vm.getUserInfo!.username)
+                ? _buildProfile(vm.getUserInfo!, vm.logout)
                 : vm.doHaveAccount != null && vm.doHaveAccount == true
-                    ? _buildLogin(vm.login, context, vm.createNewAccount)
-                    : _buildSignUp(vm.createNewAccount),
+                ? LoginView(
+                login: vm.login,
+                parentCtx: context,
+                signUp: vm.createNewAccount)
+                : SignUpView(signUp: vm.createNewAccount),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildLogin(Function login, BuildContext context, Function signup) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
+  Widget _buildProfile(UserEntity user, Function logout) {
+    return Center(
       child: Column(
         children: [
-          AppText.h2('Bạn chưa đăng nhập'),
-          AppText.body('Vui lòng đăng nhập để tiếp tục'),
-          AuthenForm(
-            buttonText: 'Login',
-            onSubmit: login,
-          ),
-          SizedBox(height: 20),
-          GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) {
-                      return _buildSignUp(signup);
-                    });
-              },
-              child: AppText.body('Create a new account'))
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSignUp(Function signup) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Column(
-        children: [
-          AppText.h2('Đăng ký'),
-          AppText.body('Vui lòng điền thông tin bên dưới'),
-          AuthenForm(
-            buttonText: 'SignUp',
-            onSubmit: signup,
+          SizedBox(height: 200),
+          AppText.bodyBitter('Welcome back, ${user.username}'),
+          SizedBox(height: 40),
+          MaterialButton(
+            minWidth: 200,
+            height: 50,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.black)
+            ),
+            child: AppText.bodyBitter('Logout'),
+            onPressed: () {logout();},
+            color: Colors.black,
           )
         ],
       ),

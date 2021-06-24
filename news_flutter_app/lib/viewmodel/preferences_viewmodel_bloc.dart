@@ -16,7 +16,26 @@ class NotFoundPreferencesState extends PreferencesState {
 
 class FoundPreferencesListState extends PreferencesState {
   final List<ArticleEntity>? articles;
-  FoundPreferencesListState(this.articles) : super(PreferencesStateStatus.haveData);
+  final bool? hasReachedMax;
+  final int? page;
+  final int? pageSize;
+
+  FoundPreferencesListState copyWith({
+    List<ArticleEntity>? articles, bool? hasReachedMax,
+    int? page, int? pageSize}) {
+    return FoundPreferencesListState(
+        articles: articles ?? this.articles,
+        hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+        page: page ?? this.page,
+        pageSize: pageSize ?? this.pageSize
+    );
+  }
+
+  FoundPreferencesListState({
+    this.articles, this.hasReachedMax, this.page = 1, this.pageSize = 20})
+      : super(PreferencesStateStatus.haveData);
+  @override
+  List<Object?> get props => [articles, hasReachedMax, page, pageSize];
 }
 
 class LoadingPreferenceState extends PreferencesState {
@@ -40,20 +59,34 @@ class PreferencesBloc extends Bloc<Event, PreferencesState> {
   Stream<PreferencesState> mapEventToState(Event event) async* {
     if (event is FetchPreferencesArticle) {
       yield* _mapFetchListArticlesToState(keyword: event.keyword);
+    } else if (event is FetchLoadMoreArticle) {
+      yield* _mapLoadMoreListArticlesToState();
+    }
+  }
+
+  Stream<PreferencesState> _mapLoadMoreListArticlesToState({String? keyword}) async* {
+    try {
+      if (state is FoundPreferencesListState) {
+        var currentPage = state.props;
+        print('PROPS : $currentPage');
+        // final response = await _service.fetchArticles(
+        //     keyword: keyword, page: state.page + 1, pageSize: 10);
+      }
+    } catch (e) {
+
     }
   }
 
   Stream<PreferencesState> _mapFetchListArticlesToState({String? keyword}) async* {
     yield LoadingPreferenceState();
     try {
-      if (state is FoundPreferencesListState) {
-
-      }
       final response = await _service.fetchArticles(keyword: keyword, page: 1, pageSize: 10);
-      print('RESPONSE : $response');
       if (response != null && response.status == "ok") {
         if (response.articles != null && response.articles!.length > 0) {
-          yield FoundPreferencesListState(response.articles);
+          yield FoundPreferencesListState(
+              articles: response.articles,
+              hasReachedMax: false,
+          );
         } else {
           yield NotFoundPreferencesState();
         }

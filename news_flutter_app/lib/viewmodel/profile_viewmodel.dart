@@ -51,6 +51,14 @@ class ProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void logout() {
+    this.user = null;
+    this.errorMessage = '';
+    this.doHaveAccount = true;
+    print('IS NULL : ${this.user == null}');
+    notifyListeners();
+  }
+
   void createNewAccount(String? username, String? password) async {
     print('CREATE NEW ACCOUNT');
     final result = validate(username, password);

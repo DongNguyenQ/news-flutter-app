@@ -17,15 +17,17 @@ class ArticleItemView extends StatelessWidget {
       children: [
         AspectRatio(
             aspectRatio: imageRatio,
-            child: article.urlToImage != null ? CustomCachedNetworkImage(url: article.urlToImage!) : SizedBox()),
+            child: article.urlToImage != null && article.urlToImage!.length > 0
+                ? CustomCachedNetworkImage(url: article.urlToImage!)
+                : SizedBox()),
         SizedBox(height: verticleSpacing),
         Padding(
             padding: EdgeInsets.symmetric(horizontal: bodyPadding),
-            child: AppText.h3(article.title ?? "")),
+            child: AppText.headlineBitter(article.title ?? "")),
         SizedBox(height: verticleSpacing),
         Padding(
             padding: EdgeInsets.symmetric(horizontal: bodyPadding),
-            child: AppText.body(article.description ?? ""))
+            child: AppText.bodyBitter(article.description ?? ""))
       ],
     );
   }

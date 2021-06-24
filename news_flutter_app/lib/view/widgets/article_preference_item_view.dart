@@ -12,7 +12,7 @@ class ArticlePreferenceItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 90,
+      height: 100,
       child: Row(
         children: [
           AspectRatio(
@@ -30,12 +30,20 @@ class ArticlePreferenceItemView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppText.headline(article.title ?? "", maxLines: 3, overflow: TextOverflow.clip),
+                AppText.headlineBitter(article.title ?? "", maxLines: 3, overflow: TextOverflow.clip),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: AppText.caption(article.author ?? "", maxLines: 1, overflow: TextOverflow.clip,)),
-                    Expanded(child: AppText.caption(article.publishedAt ?? "", maxLines: 1, overflow: TextOverflow.clip, align: TextAlign.end,))
+                    Expanded(child: AppText.captionBitter(
+                      article.author ?? "",
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,)),
+                    SizedBox(width: 10),
+                    Expanded(child: AppText.captionBitter(
+                      article.publishedAt ?? "",
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
+                      align: TextAlign.end,))
                   ],
                 )
               ],

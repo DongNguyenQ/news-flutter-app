@@ -3,69 +3,20 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:beamer/beamer.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:news_flutter_app/model/article_entity.dart';
 import 'package:news_flutter_app/view/screens/article_detail_screen.dart';
 import 'package:news_flutter_app/view/screens/preferences_screen.dart';
 import 'package:news_flutter_app/view/screens/profile_screen.dart';
 import 'package:news_flutter_app/view/screens/top_headline_screen.dart';
+import 'package:news_flutter_app/view/shared/app_styles.dart';
 import 'package:news_flutter_app/viewmodel/profile_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  SystemChrome.setEnabledSystemUIOverlays([]);
+  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   runApp(MyApp());
 }
-
-// class MyApp extends StatefulWidget {
-//   @override
-//   _MyAppState createState() => _MyAppState();
-// }
-
-// class _MyAppState extends State<MyApp> {
-//   int _currentScreenIndex = 0;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Demo',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       routes: {
-//         '/headline': (context) => TopHeadlineScreen(),
-//         '/preferences': (context) => PreferencesScreen(),
-//         '/profile': (context) => ProfileScreen()
-//       },
-//       home: Scaffold(
-//         body: Center(
-//           child: SizedBox(),
-//         ),
-//         bottomNavigationBar: BottomNavigationBar(
-//           currentIndex: _currentScreenIndex,
-//           selectedItemColor: Color(0xFF334192),
-//           unselectedItemColor: Colors.grey,
-//           onTap: (index) {
-//             switch (index) {
-//               case 0:
-//                 Navigator.pushNamed(context, "/first");
-//                 break;
-//               case 1:
-//                 Navigator.pushNamed(context, "/second");
-//                 break;
-//             }
-//           },
-//           items: <BottomNavigationBarItem>[
-//             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'HEADLINE'),
-//             BottomNavigationBarItem(
-//                 icon: Icon(Icons.calendar_today), label: "PREFERENCES"),
-//             BottomNavigationBarItem(
-//                 icon: Icon(Icons.message), label: "PROFILE"),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class MyApp extends StatelessWidget {
   final routerDelegate = BeamerDelegate(
@@ -100,9 +51,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final w700BitterFont = GoogleFonts.bitter(
+      fontWeight: FontWeight.w700,
+      fontSize: 18,
+      color: Colors.black
+    );
     return ChangeNotifierProvider(
       create: (context) => ProfileViewModel(),
       child: MaterialApp.router(
+        theme: ThemeData(
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            brightness: Brightness.light,
+            titleTextStyle: subheadingStyleBitter,
+            textTheme: TextTheme(
+
+            )
+          ),
+          primaryColor: Colors.black,
+          buttonColor: Colors.black,
+          backgroundColor: Colors.white,
+          primaryTextTheme: TextTheme(
+            headline6: w700BitterFont,
+          ),
+          textTheme: TextTheme(
+            subtitle1: w700BitterFont.apply(color: Colors.black),
+            headline6: w700BitterFont.apply(color: Colors.black),
+          ),
+        ),
         debugShowCheckedModeBanner: false,
         routerDelegate: routerDelegate,
         routeInformationParser: BeamerParser(),
