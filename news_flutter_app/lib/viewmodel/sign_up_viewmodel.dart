@@ -24,7 +24,7 @@ class SignUpViewModel extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final currentUser =
         UserEntity.fromJson(json.decode(prefs.getString('credentials')!));
-    
+
     if (username == currentUser.username) {
       this._errorMessage = 'User name already existed';
     } else {

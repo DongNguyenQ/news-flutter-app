@@ -53,9 +53,10 @@ class _TopHeadlineViewState extends State<TopHeadlineView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: new AppBar(
-      //   title: AppText.h2Bitter('Top Headlines'),
-      // ),
+      appBar: new AppBar(
+        title: AppText.h2Bitter('Top Headlines'),
+        backgroundColor: Colors.transparent,
+      ),
       body: RefreshIndicator(
         onRefresh: () => Future.sync(
           () => _refresh()

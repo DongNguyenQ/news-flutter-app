@@ -137,7 +137,6 @@ class TopHeadlinesBloc extends Bloc<Event, TopHeadlinesState> {
         );
       }
     }
-
   }
 }
 

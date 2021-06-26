@@ -24,9 +24,6 @@ class PreferencesScreen extends StatelessWidget {
     NewsService service = new NewsService();
     return MultiBlocProvider(
         providers: [
-          BlocProvider<PreferencesBloc>(
-            create: (BuildContext context) => PreferencesBloc(service),
-          ),
           BlocProvider<PreferencesKeywordBloc>(
             create: (BuildContext context) => PreferencesKeywordBloc()..add(FetchPreferencesKeywords()),
           ),
@@ -116,7 +113,6 @@ class _PreferencesViewState extends State<PreferencesView> {
               },
             ),
             SizedBox(height: 20),
-            // _buildWithNoLoadMore(),
             BlocConsumer<PreferencesArticlesBloc, PreferencesArticlesState>(
               builder: (BuildContext ctx, PreferencesArticlesState state) {
                 if (state.status == PreferencesStatus.failure && state.articles.length == 0) {
@@ -194,71 +190,6 @@ class _PreferencesViewState extends State<PreferencesView> {
 
   Widget _buildReachedEndView() {
     return Center(child: AppText.body('You have reached the end'));
-  }
-
-  Widget _buildWithNoLoadMore() {
-    return BlocConsumer<PreferencesBloc, PreferencesState>(
-      builder: (BuildContext ctx, PreferencesState state) {
-        print('STATE : $state');
-        if (state is FoundPreferencesListState) {
-          return Expanded(
-            child: ListView.separated(
-              controller: _scrollController,
-              physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              itemBuilder: (ctx, idx) => idx >= state.articles!.length
-                ? GestureDetector(
-                  onTap: () {
-                    ctx.beamTo(
-                      ArticleDetailLocation()
-                        ..state = BeamState(
-                          queryParameters: {
-                            'article': json.encode(state.articles![idx].toJson())
-                          },
-                          pathBlueprintSegments: [
-                            'articles'
-                          ],
-                        ),
-                    );
-                  },
-                  child: ArticlePreferenceItemView(article: state.articles![idx]),
-                ) : Center(
-                  child: SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(strokeWidth: 1.5),
-                  ),
-                ),
-              separatorBuilder: (ctx, idx) => SizedBox(height: 12),
-              itemCount: state.articles!.length,
-            ),
-          );
-        }
-        if (state is LoadingPreferenceState) {
-          Center(
-            child: Column(
-              children: [
-                SizedBox(height: 50,),
-                CircularProgressIndicator(color: Colors.black,)
-              ],
-            ),
-          );
-        }
-        if (state is NotFoundPreferencesState) {
-          return Center(
-            child: AppText.body('No data'),
-          );
-        }
-        if (state is ErrorPreferenceState) {
-          return Center(
-            child: AppText.body(state.error)
-          );
-        }
-        return SizedBox();
-      },
-      listener: (BuildContext ctx, PreferencesState state) {
-        print('STATE : $state');
-      },
-    );
   }
 
   void _onScrolling() {

@@ -25,18 +25,6 @@ class LoginView extends StatelessWidget {
             buttonText: 'Login',
             onSubmit: login,
           ),
-          // SizedBox(height: signUp != null && parentCtx != null ? 20 : 0),
-          // signUp != null && parentCtx != null ? GestureDetector(
-          //     onTap: () {
-          //       showModalBottomSheet(
-          //           isScrollControlled: true,
-          //           context: parentCtx!,
-          //           builder: (context) {
-          //             return SignUpView(signUp: signUp!, errorText: errorSignUpText);
-          //           });
-          //     },
-          //     child: AppText.captionBitter('Create a new account'),
-          // ) : SizedBox()
         ],
       ),
     );
