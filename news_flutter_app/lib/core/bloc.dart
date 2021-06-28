@@ -10,4 +10,4 @@ abstract class BlocState extends Equatable {
   List<Object?> get props => [];
 }
 
-enum PreferencesStateStatus { haveData, notFound, error, loading, init }
+enum StateStatus { haveData, notFound, error, loading, init }

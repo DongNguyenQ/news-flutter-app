@@ -6,6 +6,7 @@ import 'package:news_flutter_app/view/shared/app_styles.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AppText extends StatelessWidget {
+  final Key? key;
   final String text;
   final TextStyle style;
   final int? maxLines;
@@ -14,41 +15,41 @@ class AppText extends StatelessWidget {
   final TextOverflow? overflow;
   // const AppText({Key? key, required this.text, required this.style})
   //     : super(key: key);
-  const AppText.h1(this.text, {this.maxLines, this.align, this.size, this.overflow})
+  const AppText.h1(this.text, {this.key, this.maxLines, this.align, this.size, this.overflow})
       : style = h1Style;
-  const AppText.h2(this.text, {this.maxLines, this.align, this.size, this.overflow})
+  const AppText.h2(this.text, {this.key, this.maxLines, this.align, this.size, this.overflow})
       : style = h2Style;
-  const AppText.h3(this.text, {this.maxLines, this.align, this.size, this.overflow})
+  const AppText.h3(this.text, {this.key, this.maxLines, this.align, this.size, this.overflow})
       : style = h3Style;
-  const AppText.headline(this.text, {this.maxLines, this.align, this.size, this.overflow})
+  const AppText.headline(this.text, {this.key, this.maxLines, this.align, this.size, this.overflow})
       : style = headlineStyle;
-  const AppText.subheading(this.text, {this.maxLines, this.align, this.size, this.overflow})
+  const AppText.subheading(this.text, {this.key, this.maxLines, this.align, this.size, this.overflow})
       : style = subheadingStyle;
   AppText.caption(this.text,
-      {Color color = kcLightGreyColor, this.maxLines, this.align, this.size, this.overflow})
+      {Color color = kcLightGreyColor, this.key, this.maxLines, this.align, this.size, this.overflow})
       : style = captionStyle.copyWith(color: color);
 
   AppText.body(this.text,
-      {Color color = kcMediumGreyColor, this.maxLines, this.align, this.size, this.overflow})
+      {Color color = kcMediumGreyColor, this.key, this.maxLines, this.align, this.size, this.overflow})
       : style = bodyStyle.copyWith(color: color, fontSize: size);
 
-  AppText.h2Bitter(this.text, {this.maxLines, this.align, this.size, this.overflow})
+  AppText.h2Bitter(this.text, {this.maxLines, this.key, this.align, this.size, this.overflow})
       : style = h2StyleBitter;
-  AppText.headlineBitter(this.text, {this.maxLines, this.align, this.size, this.overflow})
+  AppText.headlineBitter(this.text, {this.maxLines, this.key, this.align, this.size, this.overflow})
       : style = headlineStyleBitter;
-  AppText.subheadingBitter(this.text, {this.maxLines, this.align, this.size, this.overflow})
+  AppText.subheadingBitter(this.text, {this.maxLines, this.key, this.align, this.size, this.overflow})
       : style = subheadingStyleBitter;
   AppText.captionBitter(this.text,
-      {Color color = kcMediumGreyColor, this.maxLines, this.align, this.size, this.overflow})
+      {Color color = kcMediumGreyColor, this.maxLines, this.key, this.align, this.size, this.overflow})
       : style = captionStyleBitter.copyWith(color: color).merge(TextStyle(wordSpacing: 2));
 
   AppText.bodyBitter(this.text,
-      {Color color = kcMediumGreyColor, this.maxLines, this.align, this.size, this.overflow})
+      {Color color = kcMediumGreyColor, this.maxLines, this.key, this.align, this.size, this.overflow})
       : style = bodyStyleBitter.copyWith(color: color, fontSize: size).merge(TextStyle(wordSpacing: 2, height: 1.5));
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, overflow: overflow,
+    return Text(text, overflow: overflow, key: key,
         style: style, maxLines: maxLines ?? null, textAlign: align ?? null);
   }
 }

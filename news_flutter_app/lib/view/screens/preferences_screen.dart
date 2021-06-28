@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:news_flutter_app/repository/news_repository.dart';
 import 'package:news_flutter_app/repository/news_service.dart';
 import 'package:news_flutter_app/utils/helper.dart';
 import 'package:news_flutter_app/view/widgets/article_preference_item_view.dart';
@@ -22,13 +23,14 @@ class PreferencesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     NewsService service = new NewsService();
+    NewsRepository repository = new NewsRepositoryImpl(service);
     return MultiBlocProvider(
         providers: [
           BlocProvider<PreferencesKeywordBloc>(
             create: (BuildContext context) => PreferencesKeywordBloc()..add(FetchPreferencesKeywords()),
           ),
           BlocProvider<PreferencesArticlesBloc>(
-            create: (BuildContext context) => PreferencesArticlesBloc(service),
+            create: (BuildContext context) => PreferencesArticlesBloc(service, repository),
           ),
         ],
         child: PreferencesView(),

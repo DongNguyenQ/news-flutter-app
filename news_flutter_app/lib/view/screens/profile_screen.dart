@@ -73,9 +73,11 @@ class ProfileView extends StatelessWidget {
                       );
                     });
                   }
-                  return SignUpView(
-                    signUp: model.signup,
-                    errorText: model.getErrorMessage,
+                  return SingleChildScrollView(
+                    child: SignUpView(
+                      signUp: model.signup,
+                      errorText: model.getErrorMessage,
+                    ),
                   );
                 },
               ),

@@ -22,6 +22,8 @@ class LoginView extends StatelessWidget {
           errorText != null ? AppText.captionBitter(errorText!, color: Colors.red,) : SizedBox(),
           SizedBox(height: 12,),
           AuthenForm(
+            usernameKey: Key('login-username'),
+            passwordKey: Key('login-password'),
             buttonText: 'Login',
             onSubmit: login,
           ),
@@ -29,13 +31,7 @@ class LoginView extends StatelessWidget {
       ),
     );
   }
-
-  // void signUpInsideLoginView() {
-  //   signUp!;
-  //
-  // }
 }
-
 
 class SignUpView extends StatelessWidget {
   final Function signUp;
@@ -61,6 +57,8 @@ class SignUpView extends StatelessWidget {
                 : SizedBox(),
             errorText != null ? SizedBox(height: 12,) : SizedBox(),
             AuthenForm(
+              usernameKey: Key('signup-username'),
+              passwordKey: Key('signup-password'),
               buttonText: 'SignUp',
               onSubmit: signUp,
             ),
@@ -71,12 +69,12 @@ class SignUpView extends StatelessWidget {
   }
 }
 
-
-
 class AuthenForm extends StatefulWidget {
+  final Key? usernameKey;
+  final Key? passwordKey;
   final String buttonText;
   final Function onSubmit;
-  const AuthenForm({Key? key, required this.buttonText, required this.onSubmit})
+  const AuthenForm({Key? key, required this.buttonText, required this.onSubmit, this.passwordKey, this.usernameKey})
       : super(key: key);
 
   @override
@@ -86,6 +84,7 @@ class AuthenForm extends StatefulWidget {
 class _AuthenFormState extends State<AuthenForm> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -93,12 +92,14 @@ class _AuthenFormState extends State<AuthenForm> {
       child: Column(
         children: [
           CustomTextFormField(
+            key: widget.usernameKey,
             controller: usernameController,
             hint: 'bluez, nguyenphuong, ...',
             label: 'Username *',
           ),
           SizedBox(height: 20),
           CustomTextFormField(
+            key: widget.passwordKey,
             obscure: true,
             controller: passwordController,
             hint: '',

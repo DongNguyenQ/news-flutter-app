@@ -1,17 +1,18 @@
 import 'package:bloc/bloc.dart';
 import 'package:news_flutter_app/core/bloc.dart';
 import 'package:news_flutter_app/model/article_entity.dart';
+import 'package:news_flutter_app/repository/news_repository.dart';
 import 'package:news_flutter_app/repository/news_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 
 class TopHeadlinesState extends BlocState {
-  final PreferencesStateStatus state;
+  final StateStatus state;
   TopHeadlinesState(this.state);
 }
 
 class NotFoundTopHeadlinesState extends TopHeadlinesState {
-  NotFoundTopHeadlinesState() : super(PreferencesStateStatus.notFound);
+  NotFoundTopHeadlinesState() : super(StateStatus.notFound);
 }
 
 class FoundTopHeadlinesListState extends TopHeadlinesState {
@@ -23,7 +24,7 @@ class FoundTopHeadlinesListState extends TopHeadlinesState {
     this.articles,
     this.hasReachedMax = false,
     this.pageSize = 10,
-    this.errorLoadMore}) : super(PreferencesStateStatus.haveData);
+    this.errorLoadMore}) : super(StateStatus.haveData);
 
   FoundTopHeadlinesListState copyWith({
     List<ArticleEntity>? articles,
@@ -45,21 +46,30 @@ class FoundTopHeadlinesListState extends TopHeadlinesState {
 }
 
 class LoadingTopHeadlinesState extends TopHeadlinesState {
-  LoadingTopHeadlinesState() : super(PreferencesStateStatus.loading);
+  LoadingTopHeadlinesState() : super(StateStatus.loading);
 }
 
-class InitialPreferenceState extends TopHeadlinesState {
-  InitialPreferenceState() : super(PreferencesStateStatus.init);
+class InitialHeadlineState extends TopHeadlinesState {
+  InitialHeadlineState() : super(StateStatus.init);
 }
 
 class ErrorTopHeadlinesState extends TopHeadlinesState {
   final String error;
-  ErrorTopHeadlinesState(this.error) : super(PreferencesStateStatus.error);
+  ErrorTopHeadlinesState(this.error) : super(StateStatus.error);
 }
 
 class TopHeadlinesBloc extends Bloc<Event, TopHeadlinesState> {
   final NewsService _service;
-  TopHeadlinesBloc(this._service) : super(InitialPreferenceState());
+  final NewsRepository _repository;
+  TopHeadlinesBloc(this._service, this._repository) : super(InitialHeadlineState());
+
+  void fetchInitial() {
+    this.add(FetchTopHeadlinesArticle());
+  }
+
+  void loadMore({bool? isRefresh}) {
+    this.add(FetchLoadMoreArticle(isRefresh: isRefresh));
+  }
 
   @override
   Stream<Transition<Event, TopHeadlinesState>> transformEvents

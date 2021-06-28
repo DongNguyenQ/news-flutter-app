@@ -30,7 +30,7 @@ class ArticlePreferenceItemView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppText.headlineBitter(article.title ?? "", maxLines: 3, overflow: TextOverflow.clip),
+                AppText.headlineBitter(article.title ?? "", maxLines: 2, overflow: TextOverflow.clip),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

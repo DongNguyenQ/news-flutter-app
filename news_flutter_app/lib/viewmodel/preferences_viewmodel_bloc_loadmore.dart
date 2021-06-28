@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:news_flutter_app/core/bloc.dart';
 import 'package:news_flutter_app/model/article_entity.dart';
+import 'package:news_flutter_app/repository/news_repository.dart';
 import 'package:news_flutter_app/repository/news_service.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -84,7 +85,8 @@ class PreferencesArticlesState extends BlocState {
 // BLOC
 class PreferencesArticlesBloc extends Bloc<PreferencesArticlesEvent, PreferencesArticlesState> {
   final NewsService _service;
-  PreferencesArticlesBloc(this._service) : super(PreferencesArticlesState());
+  final NewsRepository _repository;
+  PreferencesArticlesBloc(this._service, this._repository) : super(PreferencesArticlesState());
 
   @override
   Stream<Transition<PreferencesArticlesEvent, PreferencesArticlesState>> transformEvents

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_flutter_app/repository/news_repository.dart';
 import 'package:news_flutter_app/repository/news_service.dart';
 import 'package:news_flutter_app/utils/helper.dart';
 import 'package:news_flutter_app/view/widgets/article_item_view.dart';
@@ -17,9 +18,10 @@ class TopHeadlineScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     NewsService service = new NewsService();
+    NewsRepository repository = new NewsRepositoryImpl(service);
     return BlocProvider<TopHeadlinesBloc>(
         create: (BuildContext context) =>
-          TopHeadlinesBloc(service),
+          TopHeadlinesBloc(service, repository),
         child: TopHeadlineView()
     );
   }
@@ -34,6 +36,10 @@ class TopHeadlineView extends StatefulWidget {
 
 class _TopHeadlineViewState extends State<TopHeadlineView> {
   final double articleVerticleSpacing = 28;
+  final Key loadMoreReachTheEndKey = Key('loadMoreReachTheEndKey');
+  final Key loadMoreFailed = Key('loadMoreFailed');
+  final Key loadMoreLoading = Key('loadMoreLoading');
+  final Key listViewTopHeadlines = Key('listViewTopHeadlines');
 
   final ScrollController _scrollController = ScrollController();
 
@@ -65,6 +71,7 @@ class _TopHeadlineViewState extends State<TopHeadlineView> {
           builder: (BuildContext ctx, TopHeadlinesState state) {
             if (state is FoundTopHeadlinesListState) {
               return ListView.separated(
+                key: listViewTopHeadlines,
                 controller: _scrollController,
                 physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                 itemBuilder: (ctx, idx) {
@@ -73,19 +80,24 @@ class _TopHeadlineViewState extends State<TopHeadlineView> {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 30),
                         child: Center(
-                            child: AppText.captionBitter('You have reached the end')),
+                            child: AppText.captionBitter(
+                                'You have reached the end',
+                                key: loadMoreReachTheEndKey)),
                       );
                     }
                     if (state.errorLoadMore != null && state.errorLoadMore!.length > 0) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 30),
                         child: Center(
-                            child: AppText.captionBitter('Failed to fetch more')),
+                            child: AppText.captionBitter(
+                                'Failed to fetch more',
+                                key: loadMoreFailed,
+                            )),
                       );
                     }
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 30),
-                      child: CustomLoadingIndicator(),
+                      child: CustomLoadingIndicator(key: loadMoreLoading),
                     );
                   }
                   return GestureDetector(
@@ -100,7 +112,7 @@ class _TopHeadlineViewState extends State<TopHeadlineView> {
                           ),
                       );
                     },
-                    child: ArticleItemView(article: state.articles![idx],
+                    child: ArticleItemView(article: state.articles![idx], key: Key('article-${idx}'),
                     ),
                   );
                 },
@@ -109,8 +121,8 @@ class _TopHeadlineViewState extends State<TopHeadlineView> {
                 itemCount: state.articles!.length,
               );
             }
-            if (state is LoadingTopHeadlinesState && state is InitialPreferenceState) {
-              return CircularProgressIndicator();
+            if (state is LoadingTopHeadlinesState && state is InitialHeadlineState) {
+              return CustomLoadingIndicator();
             }
             if (state is ErrorTopHeadlinesState) {
               return Center(
@@ -131,16 +143,16 @@ class _TopHeadlineViewState extends State<TopHeadlineView> {
   }
 
   void _fetchInitialData() {
-    context.read<TopHeadlinesBloc>().add(FetchTopHeadlinesArticle());
+    context.read<TopHeadlinesBloc>().fetchInitial();
   }
 
   void _onScrolling() {
     if (didScrollReachTheEnd(_scrollController)) {
-      context.read<TopHeadlinesBloc>().add(FetchLoadMoreArticle());
+      context.read<TopHeadlinesBloc>().loadMore();
     }
   }
 
   void _refresh() {
-    context.read<TopHeadlinesBloc>().add(FetchLoadMoreArticle(isRefresh: true));
+    context.read<TopHeadlinesBloc>().loadMore(isRefresh: true);
   }
 }
