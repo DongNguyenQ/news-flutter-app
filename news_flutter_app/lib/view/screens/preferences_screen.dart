@@ -8,9 +8,8 @@ import 'package:news_flutter_app/view/widgets/article_preference_item_view.dart'
 import 'package:news_flutter_app/view/widgets/common_ui.dart';
 import 'package:news_flutter_app/view/widgets/custom_3rd_party_radio_button/button_text_style.dart';
 import 'package:news_flutter_app/view/widgets/custom_3rd_party_radio_button/custom_radio_button.dart';
-import 'package:news_flutter_app/viewmodel/preferences_viewmodel_bloc.dart';
-import 'package:news_flutter_app/viewmodel/preferences_viewmodel_bloc_loadmore.dart';
-import 'package:news_flutter_app/viewmodel/preferences_viewmodel_keyword_bloc.dart';
+import 'package:news_flutter_app/viewmodel/preferences_viewmodel.dart';
+import 'package:news_flutter_app/viewmodel/preferences_keyword_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

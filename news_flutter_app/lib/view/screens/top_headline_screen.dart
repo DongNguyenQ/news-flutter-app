@@ -8,7 +8,7 @@ import 'package:news_flutter_app/repository/news_service.dart';
 import 'package:news_flutter_app/utils/helper.dart';
 import 'package:news_flutter_app/view/widgets/article_item_view.dart';
 import 'package:news_flutter_app/view/widgets/common_ui.dart';
-import 'package:news_flutter_app/viewmodel/top_headline_viewmodel_bloc.dart';
+import 'package:news_flutter_app/viewmodel/top_headline_viewmodel.dart';
 
 import '../../main.dart';
 

@@ -1,40 +1,55 @@
+import 'package:dartz/dartz.dart';
+import 'package:news_flutter_app/core/network/failure.dart';
 import 'package:news_flutter_app/model/article_entity.dart';
-import 'package:news_flutter_app/model/response/fetch_list_article_response.dart';
+import 'package:news_flutter_app/model/keyword_entity.dart';
 import 'package:news_flutter_app/repository/news_service.dart';
 
 abstract class NewsRepository {
 
-  final NewsService _service;
-
-  NewsRepository(this._service);
-
-  Future<List<ArticleEntity>?> fetchPreferencesArticles({String? keyword, int? page, int? pageSize});
-  Future<List<ArticleEntity>?> fetchTopHeadlinesArticles({int? page, int? pageSize});
+  Future<Either<Failure, List<ArticleEntity>?>> fetchPreferencesArticles({String? keyword, int? page, int? pageSize});
+  Future<Either<Failure, List<ArticleEntity>?>> fetchTopHeadlinesArticles({int? page, int? pageSize});
+  Future<Either<Failure, List<KeyWordEntity>?>> fetchPreferencesKeywords();
 }
 
 class NewsRepositoryImpl extends NewsRepository {
 
-  NewsRepositoryImpl(NewsService service) : super(service);
+  final NewsService _service;
+
+  NewsRepositoryImpl(this._service);
 
   @override
-  Future<List<ArticleEntity>?> fetchPreferencesArticles(
+  Future<Either<Failure, List<ArticleEntity>?>> fetchPreferencesArticles(
           {String? keyword, int? page, int? pageSize}) async {
-    final response = await _service.fetchArticles(
-            keyword: keyword, pageSize: pageSize, page: page);
-    if (response.status == "ok") {
-      return response.articles;
+    try {
+      final response = await _service.fetchArticles(
+          keyword: keyword, pageSize: pageSize, page: page);
+      if (response.status == "ok") {
+        return Right(response.articles);
+      }
+      return Left(UnCategorizeFailure('${response.status} - Something wrong happened'));
+    } catch (e) {
+      return Left(UnCategorizeFailure(e.toString()));
     }
-    return null;
   }
 
   @override
-  Future<List<ArticleEntity>?> fetchTopHeadlinesArticles(
+  Future<Either<Failure, List<ArticleEntity>?>> fetchTopHeadlinesArticles(
           {int? page, int? pageSize}) async {
-    final response = await _service.fetchTopHeadlines(page: page, pageSize: pageSize);
-    if (response.status == "ok") {
-      return response.articles;
+    try {
+      final response = await _service.fetchTopHeadlines(page: page, pageSize: pageSize);
+      if (response.status == "ok") {
+        return Right(response.articles);
+      }
+      return Left(UnCategorizeFailure('${response.status} - Something wrong happened'));
+    } catch (e) {
+      return Left(UnCategorizeFailure(e.toString()));
     }
-    return null;
+  }
+
+  @override
+  Future<Either<Failure, List<KeyWordEntity>?>> fetchPreferencesKeywords() {
+    // TODO: implement fetchPreferencesKeywords
+    throw UnimplementedError();
   }
 
 }

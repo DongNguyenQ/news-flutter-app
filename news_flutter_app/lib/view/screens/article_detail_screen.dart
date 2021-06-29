@@ -41,7 +41,6 @@ class ArticleDetailView extends StatelessWidget {
                   icon: Icon(Icons.arrow_back),
                   onPressed: () {
                     context.beamBack();
-                    // Navigator.of(context).pop();
                   },
                 ),
                 expandedHeight: MediaQuery.of(context).size.width * 9 / 16,
@@ -90,7 +89,6 @@ class ArticleDetailView extends StatelessWidget {
                             article!.publishedAt,
                             maxLines: 1,
                             overflow: TextOverflow.clip,
-                            // color: Colors.red[300]!,
                             align: TextAlign.end,
                           ),
                         )
@@ -98,7 +96,6 @@ class ArticleDetailView extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   AppText.subheadingBitter(article!.title ?? ""),
-                  // Text(article!.title ?? "", style: TextStyle(fontSize: 20),),
                   SizedBox(height: spacing),
                   AppText.bodyBitter(article!.description ?? ""),
                   SizedBox(height: spacing),

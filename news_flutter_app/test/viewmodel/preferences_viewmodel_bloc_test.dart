@@ -4,8 +4,8 @@
 // import 'package:news_flutter_app/model/article_entity.dart';
 // import 'package:news_flutter_app/model/source_entity.dart';
 // import 'package:news_flutter_app/repository/news_service.dart';
-// import 'package:news_flutter_app/viewmodel/preferences_viewmodel_bloc_loadmore.dart';
-// import 'package:news_flutter_app/viewmodel/top_headline_viewmodel_bloc.dart';
+// import 'package:news_flutter_app/viewmodel/preferences_viewmodel.dart';
+// import 'package:news_flutter_app/viewmodel/top_headline_viewmodel.dart';
 //
 // class MockNewsService extends Mock implements NewsService {}
 //

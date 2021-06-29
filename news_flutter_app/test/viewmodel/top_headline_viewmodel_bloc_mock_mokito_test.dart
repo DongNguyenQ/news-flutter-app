@@ -7,7 +7,7 @@ import 'package:news_flutter_app/model/response/fetch_list_article_response.dart
 import 'package:news_flutter_app/model/source_entity.dart';
 import 'package:news_flutter_app/repository/news_repository.dart';
 import 'package:news_flutter_app/repository/news_service.dart';
-import 'package:news_flutter_app/viewmodel/top_headline_viewmodel_bloc.dart';
+import 'package:news_flutter_app/viewmodel/top_headline_viewmodel.dart';
 
 import 'top_headline_viewmodel_bloc_mock_mokito_test.mocks.dart';
 
