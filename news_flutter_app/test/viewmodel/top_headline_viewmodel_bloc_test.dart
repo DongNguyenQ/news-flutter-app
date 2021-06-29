@@ -27,7 +27,7 @@ void main() {
   setUp(() {
     service = new MockNewsService();
     repository = new MockNewsRepository();
-    bloc = new TopHeadlinesBloc(service, repository);
+    bloc = new TopHeadlinesBloc(repository);
   });
 
   group('Top headline viewmodel bloc test', () {

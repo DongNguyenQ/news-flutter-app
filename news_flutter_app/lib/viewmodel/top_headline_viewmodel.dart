@@ -60,9 +60,8 @@ class ErrorTopHeadlinesState extends TopHeadlinesState {
 }
 
 class TopHeadlinesBloc extends Bloc<Event, TopHeadlinesState> {
-  final NewsService _service;
   final NewsRepository _repository;
-  TopHeadlinesBloc(this._service, this._repository) : super(InitialHeadlineState());
+  TopHeadlinesBloc(this._repository) : super(InitialHeadlineState());
 
   void fetchInitial() {
     this.add(FetchTopHeadlinesArticle());

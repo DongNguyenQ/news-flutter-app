@@ -21,7 +21,7 @@ class TopHeadlineScreen extends StatelessWidget {
     NewsRepository repository = new NewsRepositoryImpl(service);
     return BlocProvider<TopHeadlinesBloc>(
         create: (BuildContext context) =>
-          TopHeadlinesBloc(service, repository),
+          TopHeadlinesBloc(repository),
         child: TopHeadlineView()
     );
   }

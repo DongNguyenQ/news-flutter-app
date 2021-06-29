@@ -42,7 +42,7 @@ void main() {
       when(service.fetchTopHeadlines(page: 1, pageSize: 10))
           .thenAnswer((_) async => expectedResponse);
 
-      final bloc = TopHeadlinesBloc(service, new NewsRepositoryImpl(service));
+      final bloc = TopHeadlinesBloc(new NewsRepositoryImpl(service));
 
       bloc.add(FetchTopHeadlinesArticle());
 

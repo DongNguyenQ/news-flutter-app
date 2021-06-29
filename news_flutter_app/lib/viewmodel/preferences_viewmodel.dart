@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:news_flutter_app/core/bloc.dart';
+import 'package:news_flutter_app/core/network/failure.dart';
 import 'package:news_flutter_app/model/article_entity.dart';
 import 'package:news_flutter_app/repository/news_repository.dart';
 import 'package:news_flutter_app/repository/news_service.dart';
@@ -84,9 +85,8 @@ class PreferencesArticlesState extends BlocState {
 
 // BLOC
 class PreferencesArticlesBloc extends Bloc<PreferencesArticlesEvent, PreferencesArticlesState> {
-  final NewsService _service;
   final NewsRepository _repository;
-  PreferencesArticlesBloc(this._service, this._repository) : super(PreferencesArticlesState());
+  PreferencesArticlesBloc(this._repository) : super(PreferencesArticlesState());
 
   @override
   Stream<Transition<PreferencesArticlesEvent, PreferencesArticlesState>> transformEvents
@@ -112,50 +112,37 @@ class PreferencesArticlesBloc extends Bloc<PreferencesArticlesEvent, Preferences
   Future<PreferencesArticlesState> _mapArtilesInitialFetchedToState(
       PreferencesArticlesState state, String keyword) async {
     if (state.hasReachedMax) return state;
-    try {
-      final response = await _service.fetchArticles(
-          keyword: keyword, page: 1, pageSize: state.pageSize);
-      if (response.status == "ok" && response.articles != null && response.articles!.length > 0) {
-        return state.copyWith(
-          status: PreferencesStatus.success,
-          articles: response.articles,
-          hasReachedMax: false,
-          currentSelectedKeyword: keyword
-        );
-      }
-      print('FAILED ON TRY');
-      return state.copyWith(status: PreferencesStatus.failure);
-    } catch (e) {
-      print('FAILED ON CATCH : ${e.toString()}');
-      return state.copyWith(
-          status: PreferencesStatus.failure,
-          errorMessage: e.toString(),
-          );
-    }
+    final result = await _repository.fetchPreferencesArticles(
+        keyword: keyword, page: 1, pageSize: state.pageSize);
+    return result.fold(
+            (failure) => state.copyWith(
+                status: PreferencesStatus.failure,
+                errorMessage: (failure as UnCategorizeFailure).message),
+            (result) => state.copyWith(
+                status: PreferencesStatus.success,
+                articles: result, hasReachedMax: false,
+                currentSelectedKeyword: keyword));
   }
 
   Future<PreferencesArticlesState> _mapArtilesLoadmoreToState(PreferencesArticlesState state) async {
     if (state.hasReachedMax) return state;
-    try {
-      final response = await _service.fetchArticles(
-          keyword: state.currentSelectedKeyword,
-          page: (state.articles.length / state.pageSize).ceil() + 1,
-          pageSize: state.pageSize);
-      if (response.status == "ok" && response.articles != null
-          && response.articles!.length > 0) {
-        return response.articles!.isEmpty
-            ? state.copyWith(hasReachedMax: true)
-            : state.copyWith(
-            status: PreferencesStatus.success,
-            articles: List.of(state.articles)..addAll(response.articles!),
-            hasReachedMax: false);
-      }
-      print('FAILED ON TRY LOADMORE');
-      return state.copyWith(status: PreferencesStatus.failure);
-    } catch (e) {
-      print('FAILED ON CATCH LOADMORE : ${e.toString()}');
-      return state.copyWith(status: PreferencesStatus.failure,
-        errorMessage: e.toString());
-    }
+    final result = await _repository.fetchPreferencesArticles(
+                keyword: state.currentSelectedKeyword,
+                page: (state.articles.length / state.pageSize).ceil() + 1,
+                pageSize: state.pageSize);
+    return result.fold(
+            (failure) => state.copyWith(
+                status: PreferencesStatus.failure,
+                errorMessage: (failure as UnCategorizeFailure).message),
+            (result) {
+              if (result!.isEmpty)
+                return state.copyWith(hasReachedMax: true);
+              return state.copyWith(
+                status: PreferencesStatus.success,
+                articles: List.of(state.articles)..addAll(result),
+                hasReachedMax: false
+              );
+            });
   }
+
 }

@@ -29,7 +29,7 @@ class PreferencesScreen extends StatelessWidget {
             create: (BuildContext context) => PreferencesKeywordBloc()..add(FetchPreferencesKeywords()),
           ),
           BlocProvider<PreferencesArticlesBloc>(
-            create: (BuildContext context) => PreferencesArticlesBloc(service, repository),
+            create: (BuildContext context) => PreferencesArticlesBloc(repository),
           ),
         ],
         child: PreferencesView(),
