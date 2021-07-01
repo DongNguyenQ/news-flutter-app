@@ -23,6 +23,7 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = Provider.of<ProfileViewModel>(context);
     vm.validateHaveAccount();
+    print('USER INFO : ${vm.getUserInfo?.username}');
     return Scaffold(
       appBar: new AppBar(
         title: AppText.h2Bitter('Profile'),
@@ -43,7 +44,9 @@ class ProfileView extends StatelessWidget {
                         onTap: () {
                           _openSignUpBottomPopup(context, vm);
                         },
-                        child: AppText.captionBitter('Create a new account'),
+                        child: AppText.captionBitter('Create a new account',
+                          key: Key('login-create-new-account-text'),
+                        ),
                       )
                     ],
                   )

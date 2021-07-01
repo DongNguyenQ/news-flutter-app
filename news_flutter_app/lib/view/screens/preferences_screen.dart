@@ -26,7 +26,7 @@ class PreferencesScreen extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider<PreferencesKeywordBloc>(
-            create: (BuildContext context) => PreferencesKeywordBloc()..add(FetchPreferencesKeywords()),
+            create: (BuildContext context) => PreferencesKeywordBloc(repository)..add(FetchPreferencesKeywords()),
           ),
           BlocProvider<PreferencesArticlesBloc>(
             create: (BuildContext context) => PreferencesArticlesBloc(repository),

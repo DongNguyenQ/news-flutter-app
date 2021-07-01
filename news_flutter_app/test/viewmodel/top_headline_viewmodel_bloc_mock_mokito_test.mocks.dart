@@ -2,12 +2,17 @@
 // in news_flutter_app/test/viewmodel/top_headline_viewmodel_bloc_mock_mokito_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i4;
+import 'dart:async' as _i5;
 
+import 'package:dartz/dartz.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:news_flutter_app/core/network/failure.dart' as _i6;
+import 'package:news_flutter_app/model/article_entity.dart' as _i7;
+import 'package:news_flutter_app/model/keyword_entity.dart' as _i8;
 import 'package:news_flutter_app/model/response/fetch_list_article_response.dart'
-    as _i2;
-import 'package:news_flutter_app/repository/news_service.dart' as _i3;
+    as _i3;
+import 'package:news_flutter_app/repository/news_repository.dart' as _i4;
+import 'package:news_flutter_app/repository/news_service.dart' as _i9;
 
 // ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: comment_references
@@ -15,41 +20,67 @@ import 'package:news_flutter_app/repository/news_service.dart' as _i3;
 // ignore_for_file: prefer_const_constructors
 // ignore_for_file: unnecessary_parenthesis
 
+class _FakeEither<L, R> extends _i1.Fake implements _i2.Either<L, R> {
+  @override
+  String toString() => super.toString();
+}
+
 class _FakeFetchListArticleResponse extends _i1.Fake
-    implements _i2.FetchListArticleResponse {}
+    implements _i3.FetchListArticleResponse {}
+
+/// A class which mocks [NewsRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNewsRepository extends _i1.Mock implements _i4.NewsRepository {
+  @override
+  _i5.Future<_i2.Either<_i6.Failure, List<_i7.ArticleEntity>?>>
+      fetchPreferencesArticles({String? keyword, int? page, int? pageSize}) =>
+          (super.noSuchMethod(
+              Invocation.method(#fetchPreferencesArticles, [],
+                  {#keyword: keyword, #page: page, #pageSize: pageSize}),
+              returnValue:
+                  Future<_i2.Either<_i6.Failure, List<_i7.ArticleEntity>?>>.value(
+                      _FakeEither<_i6.Failure, List<_i7.ArticleEntity>?>())) as _i5
+              .Future<_i2.Either<_i6.Failure, List<_i7.ArticleEntity>?>>);
+  @override
+  _i5.Future<_i2.Either<_i6.Failure, List<_i7.ArticleEntity>?>>
+      fetchTopHeadlinesArticles({int? page, int? pageSize}) => (super.noSuchMethod(
+          Invocation.method(#fetchTopHeadlinesArticles, [],
+              {#page: page, #pageSize: pageSize}),
+          returnValue:
+              Future<_i2.Either<_i6.Failure, List<_i7.ArticleEntity>?>>.value(
+                  _FakeEither<_i6.Failure, List<_i7.ArticleEntity>?>())) as _i5
+          .Future<_i2.Either<_i6.Failure, List<_i7.ArticleEntity>?>>);
+  @override
+  _i5.Future<_i2.Either<_i6.Failure, List<_i8.KeyWordEntity>?>>
+      fetchPreferencesKeywords() => (super.noSuchMethod(
+          Invocation.method(#fetchPreferencesKeywords, []),
+          returnValue:
+              Future<_i2.Either<_i6.Failure, List<_i8.KeyWordEntity>?>>.value(
+                  _FakeEither<_i6.Failure, List<_i8.KeyWordEntity>?>())) as _i5
+          .Future<_i2.Either<_i6.Failure, List<_i8.KeyWordEntity>?>>);
+}
 
 /// A class which mocks [NewsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNewsService extends _i1.Mock implements _i3.NewsService {
-  MockNewsService() {
-    _i1.throwOnMissingStub(this);
-  }
-
+class MockNewsService extends _i1.Mock implements _i9.NewsService {
   @override
-  String get apiKey =>
-      (super.noSuchMethod(Invocation.getter(#apiKey), returnValue: '')
-          as String);
-  @override
-  String get baseUrl =>
-      (super.noSuchMethod(Invocation.getter(#baseUrl), returnValue: '')
-          as String);
-  @override
-  _i4.Future<_i2.FetchListArticleResponse> fetchArticles(
+  _i5.Future<_i3.FetchListArticleResponse> fetchArticles(
           {String? keyword, int? page, int? pageSize}) =>
       (super.noSuchMethod(
               Invocation.method(#fetchArticles, [],
                   {#keyword: keyword, #page: page, #pageSize: pageSize}),
-              returnValue: Future<_i2.FetchListArticleResponse>.value(
+              returnValue: Future<_i3.FetchListArticleResponse>.value(
                   _FakeFetchListArticleResponse()))
-          as _i4.Future<_i2.FetchListArticleResponse>);
+          as _i5.Future<_i3.FetchListArticleResponse>);
   @override
-  _i4.Future<_i2.FetchListArticleResponse> fetchTopHeadlines(
+  _i5.Future<_i3.FetchListArticleResponse> fetchTopHeadlines(
           {int? page, int? pageSize}) =>
       (super.noSuchMethod(
               Invocation.method(
                   #fetchTopHeadlines, [], {#page: page, #pageSize: pageSize}),
-              returnValue: Future<_i2.FetchListArticleResponse>.value(
+              returnValue: Future<_i3.FetchListArticleResponse>.value(
                   _FakeFetchListArticleResponse()))
-          as _i4.Future<_i2.FetchListArticleResponse>);
+          as _i5.Future<_i3.FetchListArticleResponse>);
 }

@@ -2,6 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_flutter_app/core/bloc.dart';
 import 'package:news_flutter_app/model/keyword_entity.dart';
+import 'package:news_flutter_app/repository/news_repository.dart';
 
 enum PreferencesKeywordStateStatus { haveData, notFound, error, loading, init }
 
@@ -42,7 +43,8 @@ class ErrorPreferenceKeywordState extends PreferencesKeywordState {
 }
 
 class PreferencesKeywordBloc extends Bloc<Event, PreferencesKeywordState> {
-  PreferencesKeywordBloc() : super(InitialPreferenceKeywordState());
+  final NewsRepository _repository;
+  PreferencesKeywordBloc(this._repository) : super(InitialPreferenceKeywordState());
 
   @override
   Stream<PreferencesKeywordState> mapEventToState(Event event) async* {
@@ -53,26 +55,12 @@ class PreferencesKeywordBloc extends Bloc<Event, PreferencesKeywordState> {
 
   Stream<PreferencesKeywordState> _mapFetchListKeywordsToState() async* {
     yield LoadingPreferenceKeywordState();
-    try {
-      List<KeyWordEntity>? keywords = getKeywords();
-      if (keywords != null && keywords.length > 0) {
-        yield FoundPreferencesKeywordListState(keywords);
-      } else {
-        yield NotFoundPreferencesKeywordState();
-      }
-    } catch (e) {
-      yield ErrorPreferenceKeywordState(e.toString());
-    }
+    final keywords = await _repository.fetchPreferencesKeywords();
+    yield keywords.fold(
+            (failure) => ErrorPreferenceKeywordState('Something wrong'),
+            (result) => FoundPreferencesKeywordListState(result));
   }
 
-  List<KeyWordEntity> getKeywords() {
-    return [
-      new KeyWordEntity('bitcoin', 'bitcoin'),
-      new KeyWordEntity('apple', 'apple'),
-      new KeyWordEntity('earthquake', 'earthquake'),
-      new KeyWordEntity('animal', 'animal'),
-    ];
-  }
 }
 
 class FetchPreferencesKeywords extends Event {}

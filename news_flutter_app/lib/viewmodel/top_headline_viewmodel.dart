@@ -57,6 +57,11 @@ class InitialHeadlineState extends TopHeadlinesState {
 class ErrorTopHeadlinesState extends TopHeadlinesState {
   final String error;
   ErrorTopHeadlinesState(this.error) : super(StateStatus.error);
+
+  @override
+  List<Object?> get props => [
+    error
+  ];
 }
 
 class TopHeadlinesBloc extends Bloc<Event, TopHeadlinesState> {

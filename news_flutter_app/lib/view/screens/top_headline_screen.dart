@@ -100,6 +100,7 @@ class _TopHeadlineViewState extends State<TopHeadlineView> {
                       child: CustomLoadingIndicator(key: loadMoreLoading),
                     );
                   }
+                  print('ARTICLE - $idx');
                   return GestureDetector(
                     onTap: () {
                       ctx.beamTo(
@@ -112,7 +113,7 @@ class _TopHeadlineViewState extends State<TopHeadlineView> {
                           ),
                       );
                     },
-                    child: ArticleItemView(article: state.articles![idx], key: Key('article-${idx}'),
+                    child: ArticleItemView(article: state.articles![idx], key: Key('article-$idx'),
                     ),
                   );
                 },

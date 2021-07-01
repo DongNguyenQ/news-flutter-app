@@ -48,8 +48,13 @@ class NewsRepositoryImpl extends NewsRepository {
 
   @override
   Future<Either<Failure, List<KeyWordEntity>?>> fetchPreferencesKeywords() {
-    // TODO: implement fetchPreferencesKeywords
-    throw UnimplementedError();
+    final keywords = [
+      new KeyWordEntity('bitcoin', 'bitcoin'),
+      new KeyWordEntity('apple', 'apple'),
+      new KeyWordEntity('earthquake', 'earthquake'),
+      new KeyWordEntity('animal', 'animal'),
+    ];
+    return Future.value(Right(keywords));
   }
 
 }
