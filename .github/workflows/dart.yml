@@ -17,6 +17,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with: 
+          flutter-version: '1.9.1+hotgix.6'
 
       # Note: This workflow uses the latest stable version of the Dart SDK.
       # You can specify other versions if desired, see documentation here:
@@ -40,3 +43,4 @@ jobs:
       # want to change this to 'flutter test'.
       - name: Run tests
         run: flutter test
+      - run: flutter build apk
